@@ -1,0 +1,5 @@
+package com.spring.www.repo;
+
+public interface Repository {
+
+}

@@ -1,0 +1,39 @@
+package com.spring.www.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import com.spring.exception.ResourceNotFoundException;
+import com.spring.www.model.Employee;
+import com.spring.www.repo.EmployeeRepository;
+
+@Service
+public class EmployeeService {
+	@Autowired
+	EmployeeRepository employeeRepository;
+	public List<Employee> getEmployees()
+	{
+		return employeeRepository.findAll();
+	}
+	public Employee addEmployees(Employee employee)
+	{
+		return employeeRepository.save(employee);
+	}
+	public Employee getEmployee(long id)
+	{
+		return employeeRepository.findById(id).
+				orElseThrow(()-> new ResourceNotFoundException("Id Not Found"));
+	}
+	public ResponseEntity<Employee> updateEmployee( long id, Employee employee)
+	{
+		Employee oldEmp= employeeRepository.findById(employee.getId()).orElseThrow(()-> new ResourceNotFoundException("Id Not Found"));
+		oldEmp.setFirstName(employee.getFirstName());
+		oldEmp.setLastName(employee.getLastName());
+		oldEmp.setEmail(employee.getEmail());
+		Employee updateEmp=employeeRepository.save(oldEmp);
+		return ResponseEntity.ok(updateEmp);
+	}
+}
